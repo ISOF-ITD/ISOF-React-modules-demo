@@ -19,7 +19,7 @@ var path = require('path');
 var gulpif = require('gulp-if');
 
 
-var production = false;
+var production = true;
 
 if (production) {
 	process.env.NODE_ENV = 'production';
@@ -35,7 +35,7 @@ gulp.task('less', function(){
     return gulp.src('./less/style-basic.less')
         .pipe(less())
         .pipe(gulpif(production, minifyCSS({keepBreaks:true})))
-        .pipe(gulp.dest('www/css'));
+        .pipe(gulp.dest('docs/css'));
 });
 
 gulp.task('deploy', function (){
@@ -70,5 +70,5 @@ function bundleApp(isProduction) {
 	    .pipe(source('app.js'))
     	.pipe(buffer())
         .pipe(gulpif(production, uglify()))
-	    .pipe(gulp.dest('./www/js/'));
+	    .pipe(gulp.dest('./docs/js/'));
 }
