@@ -12,6 +12,11 @@ if (!window.Promise) {
 	window.Promise = Promise;
 }
 
+// Initalisera stöd för flerspråkighet
+import Lang from './../ISOF-React-modules/lang/Lang';
+window.Lang = Lang;
+window.l = Lang.get;
+
 // Initalisera React.js Router
 ReactDOM.render(
 	<Application />,

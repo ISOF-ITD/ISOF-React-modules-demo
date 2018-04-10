@@ -15,6 +15,11 @@ import CheckBoxList from './../../ISOF-React-modules/components/controls/CheckBo
 import WindowScroll from './../../ISOF-React-modules/utils/windowScroll';
 import Slider from './../../ISOF-React-modules/components/controls/Slider';
 import AutocompleteInput from './../../ISOF-React-modules/components/controls/AutocompleteInput';
+import PopulatedSelect from './../../ISOF-React-modules/components/controls/PopulatedSelect';
+import ShareButtons from './../../ISOF-React-modules/components/controls/ShareButtons';
+import ImageMap from './../../ISOF-React-modules/components/views/ImageMap';
+import SitevisionContent from './../../ISOF-React-modules/components/controls/SitevisionContent';
+import PdfViewer from './../../ISOF-React-modules/components/controls/PdfViewer';
 
 var Highlight = require('react-highlight');
 
@@ -32,7 +37,8 @@ export default class Application extends React.Component {
 		this.state = {
 			popupVisible: false,
 			messageInputValue: 'Popup meddelande',
-			selectedCheckboxValues: []
+			selectedCheckboxValues: [],
+			popupWindowOpen: false
 		};
 
 		this.checkBoxListValues = [
@@ -63,6 +69,9 @@ export default class Application extends React.Component {
 		return item.name+' ('+item.doc_count+')';
 	}
 
+	haradSelectFormatListLabel(item) {
+		return item.name+', '+item.landskap;
+	}
 
 	render() {
 		const {
@@ -81,7 +90,7 @@ export default class Application extends React.Component {
 				<div className="container">
 					<h1>ISOF React.js modul gallery</h1>
 
-					<p>Exempel och kod för moduler som finns i <a href="https://github.com/ISOF-ITD/ISOF-React-modules">ISOF-React-modules</a>.</p>
+					<p>Exempel och kod för moduler som finns i <a href="https://github.com/ISOF-ITD/ISOF-React-modules">ISOF-React-modules</a>. Vissa moduler är speciellt anpassad till kartsidor och visas inte här.</p>
 
 					<hr/>
 
@@ -213,7 +222,7 @@ export default class Application extends React.Component {
 						<div className="six columns">
 
 							<DropdownMenu
-									manuallyClose="false"
+									manuallyClose={false}
 									className="dropdown-css-class"
 									label="Klicka för att öppna DropDown">
 								{dropdownItems}
@@ -235,13 +244,10 @@ export default class Application extends React.Component {
 									'];\n',
 									'\n',
 							 		'<DropdownMenu\n',
-									'		manuallyClose="false"\n',
+									'		manuallyClose={false"}\n',
 									'		className="dropdown-css-class"\n',
 									'		label="Klicka för att öppna DropDown">\n',
-									'	<div>\n',
-									'		<p>DropdownMenu innehåll.</p>\n',
-									'		<a href="http://www.sprakochfolkminnen.se/" target="_blank">Länk</a>\n',
-									'	</div>\n',
+									'	{dropdownItems}\n',
 									'</DropdownMenu>'
 							 	]
 							 }
@@ -254,7 +260,7 @@ export default class Application extends React.Component {
 						<div className="six columns">
 
 							<DropdownMenu
-									manuallyClose="false"
+									manuallyClose={false}
 									className="dropdown-css-class"
 									headerText="Text för huvuded"
 									label="Klicka för att öppna Dropdown"
@@ -281,6 +287,120 @@ export default class Application extends React.Component {
 							 	]
 							 }
 							 </Highlight>
+
+						</div>
+					</div>
+
+					<hr/>
+
+					<h2>AutocompleteInput</h2>
+
+					<div className="row">
+						<div className="six columns">
+							<p>Text input som hämtar data från en API för att visa en "auto complete" lista. Exemplet visa lista över personer från Sägendatabas Elasticsearch som börjar på bokstaver som man har skrivit i textrutan.</p>
+						</div>
+
+						<div className="six columns">
+
+							<h3>CSS</h3>
+							<Highlight>
+								{
+									[
+										'@import "../ISOF-React-modules/less/ui-components/autocomplete-input.less";'
+									]
+								}
+							</Highlight>
+
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="six columns">
+
+							<AutocompleteInput inputName="personsInput" 
+								searchUrl={'http://frigg.sprakochfolkminnen.se/sagendatabas/api/es/autocomplete/persons/?search=$s'} 
+								valueField="name"
+								listLabelFormatFunc={this.personsAutocompleteFormatListLabel} />
+
+
+						</div>
+						<div className="six columns">
+
+							<Highlight>
+								{
+									[
+										'import AutocompleteInput from \'./../../ISOF-React-modules/components/controls/AutocompleteInput\';\n',
+										'\n',
+										'personsAutocompleteFormatListLabel(item) {\n',
+										'	return item.name+\' (\'+item.doc_count+\')\';\n',
+										'}\n',
+										'\n',
+										'<AutocompleteInput inputName="personsInput" \n',
+										'	searchUrl={\'http://frigg.sprakochfolkminnen.se/sagendatabas/api/es/autocomplete/persons/?search=$s\'} \n',
+										'	valueField="term"\n',
+										'	listLabelFormatFunc={this.personsAutocompleteFormatListLabel} />\n',
+									]
+								}
+							</Highlight>
+
+						</div>
+					</div>
+
+					<hr/>
+
+					<h2>PopulatedSelect</h2>
+
+					<div className="row">
+						<div className="six columns">
+							<p>Select input som fylls med data från en API.</p>
+							<ul style={{display: 'none'}}>
+								<li>value</li>
+								<li>onChange</li>
+								<li>inputName</li>
+								<li>dataUrl</li>
+								<li>sortOptions</li>
+								<li>valueField</li>
+								<li>listLabelFormatFunc</li>
+								<li>inputClassName</li>
+							</ul>
+						</div>
+
+						<div className="six columns">
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="six columns">
+
+							<label>Härad:</label>
+							<PopulatedSelect inputName="haradInput" 
+								dataUrl="http://frigg.sprakochfolkminnen.se/sagendatabas/api/es/harad/" 
+								valueField="name"
+								sortOptions="true"
+								listLabelFormatFunc={this.haradSelectFormatListLabel} />
+
+
+						</div>
+						<div className="six columns">
+
+							<Highlight>
+								{
+									[
+										'import PopulatedSelect from \'./../../ISOF-React-modules/components/controls/PopulatedSelect\';\n',
+										'\n',
+										'haradSelectFormatListLabel(item) {\n',
+										'	return item.name+\', \'+item.landskap;\n',
+										'}\n',
+										'\n',
+										'<PopulatedSelect inputName="haradInput" \n',
+										'	dataUrl="http://frigg.sprakochfolkminnen.se/sagendatabas/api/es/harad/" \n',
+										'	valueField="name"\n',
+										'	sortOptions="true"\n',
+										'	inputClassName="u-full-width" \n',
+										'	listLabelFormatFunc={this.haradSelectFormatListLabel} />',
+									]
+								}
+							</Highlight>
 
 						</div>
 					</div>
@@ -327,6 +447,82 @@ export default class Application extends React.Component {
 										'<Slider range={{min: 0, max: 100}}\n',
 										'	start={[20, 80]}\n',
 										'	enabled={true} />'
+									]
+								}
+							</Highlight>
+
+						</div>
+					</div>
+
+					<hr/>
+
+					<h2>PopupWindow</h2>
+
+					<div className="row">
+						<div className="six columns">
+							<p>Stor popup ruta som kan innehålla html eller andra React.js moduler. Öppnas i mittet av webbsidan och har en mörk bakgrund. Har en kryssknapp för att stänga den.</p>
+						</div>
+
+						<div className="six columns">
+
+							<h3>CSS</h3>
+							<Highlight>@import "../ISOF-React-modules/less/ui-components/popupwindow.less";</Highlight>
+
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="six columns">
+
+							<PopupWindow windowOpen={this.state.popupWindowOpen}>
+								<div className="container">
+		
+									<div className="container-header">
+										<div className="row">
+											<div className="twelve columns">
+												<h2>Popup titel</h2>
+												<p>Undertitel</p>
+											</div>
+										</div>
+									</div>
+
+									<p>Popup window content. Kan innehålla html eller andra React.js moduler.</p>
+
+									<SimpleMap marker={{lat: 57.703784, lng: 11.965424, label: 'DAG, Göteborg'}} />
+
+								</div>
+							</PopupWindow>
+
+							<button onClick={function() {this.setState({popupWindowOpen: true})}.bind(this)}>Öppna PopupWindow</button>
+
+						</div>
+						<div className="six columns">
+
+							<Highlight>
+								{
+									[
+										'import PopupWindow from \'./../../ISOF-React-modules/components/controls/PopupWindow\';\n',
+										'\n',
+										'<PopupWindow windowOpen={this.state.popupWindowOpen}>\n',
+										'	<div className="container">\n',
+										'\n',
+										'		<div className="container-header">\n',
+										'			<div className="row">\n',
+										'				<div className="twelve columns">\n',
+										'					<h2>Popup titel</h2>\n',
+										'					<p>Undertitel</p>\n',
+										'				</div>\n',
+										'			</div>\n',
+										'		</div>\n',
+										'\n',
+										'		<p>Popup window content. Kan innehålla html eller andra React.js moduler.</p>\n',
+										'\n',
+										'		<SimpleMap marker={{lat: 57.703784, lng: 11.965424, label: \'DAG, Göteborg\'}} />\n',
+										'\n',
+										'	</div>\n',
+										'</PopupWindow>\n',
+										'\n',
+										'<button onClick={function() {this.setState({popupWindowOpen: true})}.bind(this)}>Öppna PopupWindow</button>'
 									]
 								}
 							</Highlight>
@@ -419,7 +615,7 @@ export default class Application extends React.Component {
 									closeTrigger="click" 
 									autoHide={false} 
 									message="ElementNotificationMessage exempel.">
-								<button>Klicka här för att stänga popuprutan.</button>
+								<button>Stäng popuprutan.</button>
 							</ElementNotificationMessage>
 
 						</div>
@@ -428,7 +624,7 @@ export default class Application extends React.Component {
 							<Highlight>
 								{
 									[
-										'import ElementNotificationMessage from \'./../../ISOF-React-modules/components/controls/ElementNotificationMessage\'\n;',
+										'import ElementNotificationMessage from \'./../../ISOF-React-modules/components/controls/ElementNotificationMessage\';\n',
 										'\n',
 										'<ElementNotificationMessage \n',
 										'		placement="under" \n',
@@ -450,20 +646,35 @@ export default class Application extends React.Component {
 
 					<hr/>
 
-					<h2>AutocompleteInput</h2>
+					<h2>ShareButtons</h2>
 
 					<div className="row">
 						<div className="six columns">
-							<p>Text input som hämtar data från en API för att visa en "auto complete" lista. Exemplet visa lista över personer från Sägendatabas Elasticsearch som börjar på bokstaver som man har skrivit i textrutan.</p>
+							<p>Knapp för att dela webbadress på Facebook.</p>
 						</div>
 
 						<div className="six columns">
-
 							<h3>CSS</h3>
 							<Highlight>
 								{
 									[
-										'@import "../ISOF-React-modules/less/ui-components/autocomplete-input.less";'
+										'@import "../ISOF-React-modules/less/ui-components/share-buttons.less";'
+									]
+								}
+							</Highlight>
+
+							<h3>Initialisera Faceboook API på webbsidan</h3>
+							<Highlight>
+								{
+									[
+										'<div id="fb-root"></div>\n',
+										'<script>(function(d, s, id) {\n',
+										'   var js, fjs = d.getElementsByTagName(s)[0];\n',
+										'   if (d.getElementById(id)) return;\n',
+										'   js = d.createElement(s); js.id = id;\n',
+										'   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";\n',
+										'   fjs.parentNode.insertBefore(js, fjs);\n',
+										'}(document, \'script\', \'facebook-jssdk\'));</script>'
 									]
 								}
 							</Highlight>
@@ -474,11 +685,7 @@ export default class Application extends React.Component {
 					<div className="row">
 						<div className="six columns">
 
-							<AutocompleteInput inputName="termsInput" 
-								searchUrl={'http://uuc-isof003-t.its.uu.se/sagenkarta/es/autocomplete/persons/?search=$s&relation=collector'} 
-								valueField="name"
-								listLabelFormatFunc={this.personsAutocompleteFormatListLabel} />
-
+							<p>Dela http://sprakochfolkminnen.se: <br/><br/><ShareButtons path="http://sprakochfolkminnen.se" /></p>
 
 						</div>
 						<div className="six columns">
@@ -486,17 +693,119 @@ export default class Application extends React.Component {
 							<Highlight>
 								{
 									[
-										'import AutocompleteInput from \'./../../ISOF-React-modules/components/controls/AutocompleteInput\';\n',
+										'import ShareButtons from \'./../../ISOF-React-modules/components/controls/ShareButtons\';\n',
 										'\n',
-										'personsAutocompleteFormatListLabel(item) {\n',
-										'	return item.name+\' (\'+item.doc_count+\')\';\n',
-										'}\n',
-										'\n',
-										'<AutocompleteInput inputName="termsInput" \n',
-										'	searchUrl={\'http://uuc-isof003-t.its.uu.se/sagenkarta/es/autocomplete/persons/?search=$s&relation=collector\'} \n',
-										'	valueField="term"\n',
-										'	listLabelFormatFunc={this.personsAutocompleteFormatListLabel} />\n',
+										'<ShareButtons path="http://sprakochfolkminnen.se" />',
 									]
+								}
+							</Highlight>
+
+						</div>
+					</div>
+
+
+					<hr/>
+
+					<h2>ImageMap</h2>
+
+					<div className="row">
+						<div className="six columns">
+							<p>En module som gör att man kan zooma in på en bild.</p>
+						</div>
+
+						<div className="six columns">
+							<h3>CSS</h3>
+							<Highlight>
+								{
+									[
+										'@import "../ISOF-React-modules/less/leaflet.less";\n',
+										'@import "../ISOF-React-modules/less/ui-components/image-map.less";'
+									]
+								}
+							</Highlight>
+
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="six columns">
+
+							<p><a href="https://en.wikipedia.org/wiki/The_Garden_of_Earthly_Delights" target="_blank">The Garden of Earthly Delights (1490-1510) av Hieronymus Bosch</a>:</p>
+							<ImageMap maxZoom={4} image="https://uploads6.wikiart.org/images/hieronymus-bosch/the-garden-of-earthly-delights-1515-7.jpg" />
+
+						</div>
+						<div className="six columns">
+
+							<Highlight>
+								{
+									[
+										'import ImageMap from \'./../../ISOF-React-modules/components/views/ImageMap\';\n',
+										'\n',
+										'<ImageMap maxZoom={4} \n',
+										'	image="https://uploads6.wikiart.org/images/hieronymus-bosch/the-garden-of-earthly-delights-1515-7.jpg" />',
+									]
+								}
+							</Highlight>
+
+						</div>
+					</div>
+
+					<hr/>
+
+					<h2>SitevisionContent</h2>
+
+					<div className="row">
+						<div className="six columns">
+							<p>Modul för att hämta och visa innnehåll från en sida i Sitevison.</p>
+						</div>
+
+						<div className="six columns">
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="six columns">
+
+							<div style={{padding: 10, border: '1px dashed #999'}}>
+								<SitevisionContent url="sitevision-content-page.html" />
+							</div>
+
+						</div>
+						<div className="six columns">
+
+							<Highlight>
+								{
+									'<SitevisionContent url="http://www.sprakochfolkminnen.se/folkminnen.html" />'
+								}
+							</Highlight>
+
+						</div>
+					</div>
+
+					<hr/>
+
+					<h2>PdfViewer</h2>
+
+					<div className="row">
+						<div className="six columns">
+							<p>Modul för att embedda pdf på en webbsida.</p>
+						</div>
+
+						<div className="six columns">
+						</div>
+					</div>
+
+					<div className="row">
+						<div className="six columns">
+
+							<PdfViewer url="http://www.sprakochfolkminnen.se/download/18.71ea720615e50c4cc42818f8/1506418913544/17358.pdf" />
+
+						</div>
+						<div className="six columns">
+
+							<Highlight>
+								{
+									'<PdfViewer url="http://www.sprakochfolkminnen.se/download/18.71ea720615e50c4cc42818f8/1506418913544/17358.pdf" />'
 								}
 							</Highlight>
 

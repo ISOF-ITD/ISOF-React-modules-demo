@@ -17,18 +17,20 @@
 @import "../ISOF-React-modules/less/ui-components/slider.less";
 @import "../ISOF-React-modules/less/ui-components/checkbox-list.less";
 @import "../ISOF-React-modules/less/ui-components/autocomplete-input.less";
+@import "../ISOF-React-modules/less/ui-components/popupwindow.less";
+@import "../ISOF-React-modules/less/ui-components/image-map.less";
 
 @import "../ISOF-React-modules/less/nouislider.min.less";
 @import "../ISOF-React-modules/less/minimal-scrollbar.less";
 @import "../ISOF-React-modules/less/tables.less";
 
-@import "../ISOF-React-modules/less/sitevision.less";
 
 @color-red: #a6192e;
 @color-red-lighter: #d4454c;
 @color-red-divider: #b62837;
 @color-gray: #edeff1;
 @color-gray-background: #f5f5f5;
+@color-gray-border: #d1d1d1;
 @notification-background: #7d1b1f;
 
 @viewport {
@@ -36,6 +38,8 @@
 }
 
 body {
+	background-color: @color-gray-background;
+
 	font-family: 'Open Sans', sans-serif;
 }
 
@@ -50,5 +54,5 @@ code {
 }
 
 .container {
-	max-width: 1600px;
+	max-width: 1400px;
 }
